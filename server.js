@@ -113,6 +113,15 @@ app.get('/post/pnr/', async (req, resp) => {
     console.log(data)
 })
 
+app.get('/post/bookingid', async (req, resp) => {
+    let data = await dbConnect2();
+    data = await data.find().toArray();
+    resp.send(data)
+    console.log(data)
+})
+
+
+
 app.get('/post/pnr/:PnrNumber', async (req, resp) => {
     try {
         let data = await dbConnect2();
@@ -128,6 +137,35 @@ app.get('/post/pnr/:PnrNumber', async (req, resp) => {
     }
 })
 
+
+app.get('/post/bookingid/:bookingID/:emailid', async (req, resp) => {
+    try {
+        let data = await dbConnect2();
+        const bookingID = req.params.bookingID;
+        const emailid = req.params.emailid;
+        data = await data.find({
+            
+            bookingID: { $eq: bookingID },
+            emailid : { $eq : emailid}
+       
+    }).toArray();
+    if (data.length > 0 ) {
+        resp.send(data)
+    } else {
+    resp.status(500).send("No matching found")
+    }
+   
+        
+    }
+   
+    catch(error) {
+        console.log('Error', error);
+        resp.status(500).send("Internal server error")
+    }
+})
+
+
+
 app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
     try {
         let data = await dbConnect2();
@@ -141,9 +179,6 @@ app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
                 emailid: { $eq: emailid }
             
         }).toArray();
-         
-
-        
 
         console.log('Found Data : ', data);
         if (data.length > 0) {
@@ -158,6 +193,37 @@ app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
         resp.status(500).send("Internal Server Error");
     }
 });
+
+// app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
+//     try {
+//         let data = await dbConnect2();
+//         const PnrNumber = parseInt(req.params.PnrNumber, 10);
+//         const emailid = req.params.emailid;
+    
+
+//         data = await data.find({
+            
+//                  PnrNumber: { $eq:  PnrNumber },
+//                 emailid: { $eq: emailid }
+            
+//         }).toArray();
+         
+
+        
+
+//         console.log('Found Data : ', data);
+//         if (data.length > 0) {
+//             resp.send(data)
+//         }
+//         else {
+//             resp.status(500).send("No matching found")
+//         }
+
+//     } catch (error) {
+//         console.log('Error', error);
+//         resp.status(500).send("Internal Server Error");
+//     }
+// });
 
 // app.get('/post/pnr/:PnrNumber/:bookingID', async (req, resp) => {
 //     try {
@@ -174,48 +240,7 @@ app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
 //     }
 //     }) 
 
-    
-// app.get('/post/booking/pnr/', async (req, resp) => {
-//     let data = await dbConnect2();
-//     data = await data.find().toArray();
-//     resp.send(data)
-//     //resp.json({message: "Hello from Server"});
-//     console.log(data)
-//})
-// app.get('/post/pnr/:quota', async (req, resp) => {
-//     try {
-//         // Assuming dbConnect2 returns a MongoDB collection instance
-//         const data = await dbConnect2();
-        
-//         const quota = req.params.quota;
-        
-//         // Assuming "data" is a MongoDB collection
-//         const result = await data.findOne({ quota });
-        
-//         console.log('Found data from bookingID:', result);
-//         resp.send(result);
-//     } catch (error) {
-//         console.log('Error:', error);
-//         resp.status(500).send("Internal Server Error");
-//     }
-// });
 
-
-// app.get('/post/booking/pnr/:bookingID', async(req, resp) => {
-//     try {
-//         let data = await dbConnect2();
-//          const rdata = req.body;
-//          console.log("post wala data" , rdata)
-//         const bookingID = parseInt(req.params.bookingID, 10);
-//         data = await data.find({bookingID: { $eq: bookingID}}).toArray();
-//         console.log('Found data from bookingID : ', data);
-//         resp.send(data)
-//     }
-//     catch(error) {
-//         console.log('Error', error);
-//         resp.status(500).send("Internal Server Error")
-//     }
-// })    
 
 
     app.get('/post/livestatus', async (req, resp) => {

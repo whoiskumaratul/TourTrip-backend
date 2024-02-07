@@ -1,0 +1,48 @@
+//         if (!data[0]){
+//             return resp.status(404).send(`No Booking with ID ${bookingID}`)}
+//         else{
+//             const pnrData = await getPNRDetails(data[0].PNR)
+//             data[0]['PassengerInfo']= pnrData['PassengerInfo'];
+//             data[0]["FlightSchedule"] = pnrData["FlightSchedule"];
+//             return resp.send(data[0]);}
+//     }
+
+//     catch(error){
+//         console.log('Error in getting flight details for a specific booking');
+//         console.log(error);
+//         return resp.status(503).send("Service Unavailable");
+//     }
+// });
+
+
+
+app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
+    try {
+        let data = await dbConnect2();
+        const PnrNumber = parseInt(req.params.PnrNumber, 10);
+        const emailid = req.params.emailid;
+    
+
+        data = await data.find({
+            
+                 PnrNumber: { $eq:  PnrNumber },
+                emailid: { $eq: emailid }
+            
+        }).toArray();
+         
+
+        
+
+        console.log('Found Data : ', data);
+        if (data.length > 0) {
+            resp.send(data)
+        }
+        else {
+            resp.status(500).send("No matching found")
+        }
+
+    } catch (error) {
+        console.log('Error', error);
+        resp.status(500).send("Internal Server Error");
+    }
+});
