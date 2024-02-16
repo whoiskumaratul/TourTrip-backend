@@ -18,8 +18,6 @@ async function dbConnect2() {
     console.log(result2)
     db2 = result2.db(dbName);
     return db2.collection("pnr")
-    
-
 }
 
 async function dbConnect3() {
@@ -29,6 +27,13 @@ async function dbConnect3() {
     return db3.collection("runningstatus")
 }
 
+
+async function dbConnect4() {
+    let result4 = await client.connect();
+    console.log("Connected to DB server", result4);
+    db4 = result4.db(dbName);
+    return db4.collection('loginsignup')
+}
 
 
 // async function dbConnect2() {
@@ -48,5 +53,6 @@ async function dbConnect3() {
 module.exports = {
     dbConnect,
     dbConnect2,
-    dbConnect3
+    dbConnect3,
+    dbConnect4
 };

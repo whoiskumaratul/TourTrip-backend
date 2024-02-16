@@ -1,6 +1,6 @@
 const { ObjectId, ObjectId2 } = require('mongodb');
 const express = require('express');
-const {dbConnect, dbConnect2, dbConnect3} = require('../server/mongodb/mongodb')
+const {dbConnect, dbConnect2, dbConnect3, dbConnect4} = require('../server/mongodb/mongodb')
 //const dbConnect2 = require('../server/mongodb/mongodb')
 
 const mongoDB = require('mongodb');
@@ -147,7 +147,7 @@ app.get('/post/bookingid/:bookingID/:emailid', async (req, resp) => {
             
             bookingID: { $eq: bookingID },
             emailid : { $eq : emailid}
-       
+        
     }).toArray();
     if (data.length > 0 ) {
         resp.send(data)
@@ -240,6 +240,14 @@ app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
 //     }
 //     }) 
 
+
+  
+  app.post('/post/loginsignup', async (req, resp) => {
+    let data = await dbConnect4();
+    result = await data.insertOne(req.body)
+    resp.send(result)
+    console.log(result)
+  })
 
 
 
