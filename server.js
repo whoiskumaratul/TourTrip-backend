@@ -242,12 +242,38 @@ app.get('/post/pnr/:PnrNumber/:emailid', async(req, resp) => {
 
 
   
-  app.post('/post/loginsignup', async (req, resp) => {
+//   app.post('/post/loginsignup', async (req, resp) => {
+//     let data = await dbConnect4();
+//     result = await data.insertOne(req.body)
+//     resp.send(result)
+//     console.log(result)
+//   })
+
+
+
+app.post('/post/loginsignup/', async (req, res) => {
     let data = await dbConnect4();
-    result = await data.insertOne(req.body)
-    resp.send(result)
-    console.log(result)
-  })
+  const { name, email, phoneno, password } = req.body;
+
+  // Check if user already exists in the database
+  const existingUser = await data.findOne({ email: req.body.email });
+
+
+  if (existingUser) {
+    // User exists, perform login
+    if (existingUser.email === email) {
+      res.status(200).json({ message: 'Login successful' });
+    } else {
+      res.status(401).json({ message: 'Invalid credentials' });
+    }
+  } else {
+    // User doesn't exist, perform registration
+    const newUser = { name, email, phoneno, password };
+    let result = await data.insertOne(newUser);
+
+    res.status(201).json({ message: 'User registered successfully' });
+  }
+});
 
 
 
